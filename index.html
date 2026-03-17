@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VALO-X Cinematic</title>
+<style>
+/* ===== GLOBAL ===== */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: black;
+  overflow: hidden; /* prevent scroll during loader */
+}
+
+/* ===== LOADER ===== */
+#loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: #0f1923;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 99999;
+}
+
+#logo {
+  font-size: 60px;
+  color: #ff4655;
+  margin-bottom: 30px;
+  opacity: 0;
+  transform: scale(0.5);
+  animation: logoFade 1.5s forwards;
+}
+
+@keyframes logoFade {
+  to { opacity: 1; transform: scale(1); }
+}
+
+#percentage {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.bar {
+  width: 300px;
+  height: 8px;
+  background: #222;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.progress {
+  height: 100%;
+  width: 0%;
+  background: #ff4655;
+}
+
+#pressEnter {
+  display: none;
+  font-size: 24px;
+  color: #ff4655;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,50%,100% { opacity:1; }
+  25%,75% { opacity:0; }
+}
+
+/* ===== MAIN SITE ===== */
+#mainSite {
+  display: none;
+  overflow-y: auto;
+  height: 100vh;
+  transition: opacity 0.8s ease;
+  opacity: 0;
+}
+
+#mainSite.active {
+  opacity: 1;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  height: 60vh;
+}
+
+.hero video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+}
+
+.hero-content {
+  position: relative;
+  text-align: center;
+  top: 35%;
+  animation: heroFade 1s ease forwards;
+  opacity: 0;
+}
+
+@keyframes heroFade {
+  to { opacity: 1; }
+}
+
+.hero h1 {
+  font-size: 60px;
+  color: #ff4655;
+}
+
+/* AGENTS GRID */
+.agents {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px;
+  flex-wrap: wrap;
+  background: #0f1923;
+}
+
+.agent {
+  width: 250px;
+  background: #1f2731;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.5s;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 #ff4655;
+  transform: translateY(0);
+}
+
+.agent:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 0 20px #ff4655;
+  border: 2px solid #ff4655;
+}
+
+.agent img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.agent h3 {
+  padding: 10px;
+  text-align: center;
+}
+
+/* PAGE */
+.page {
+  display: none;
+  padding: 40px;
+  background: #0f1923;
+  text-align: center;
+  animation: pageFade 0.6s ease forwards;
+  opacity: 0;
+}
+
+.page.active {
+  display: block;
+  opacity: 1;
+}
+
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+/* ABILITIES */
+.abilities {
+  margin-top: 20px;
+}
+
+.ability {
+  background: #1f2731;
+  margin: 10px auto;
+  padding: 12px;
+  border-radius: 8px;
+  max-width: 400px;
+  text-align: left;
+  opacity: 0;
+  transform: translateX(-50px);
+  animation: abilitySlide 0.5s forwards;
+}
+
+.ability:nth-child(1){ animation-delay: 0.1s; }
+.ability:nth-child(2){ animation-delay: 0.3s; }
+.ability:nth-child(3){ animation-delay: 0.5s; }
+.ability:nth-child(4){ animation-delay: 0.7s; }
+
+@keyframes abilitySlide {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.back {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #ff4655;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LOADER ===== -->
+<div id="loader">
+  <div id="logo">VALO-X</div>
+  <div id="percentage">0%</div>
+  <div class="bar"><div class="progress" id="progress"></div></div>
+  <div id="pressEnter">Press ENTER to Start</div>
+</div>
+
+<audio id="loadSound" src="https://www.soundjay.com/button/sounds/button-09.mp3"></audio>
+
+<!-- ===== MAIN SITE ===== -->
+<div id="mainSite">
+
+  <!-- HERO -->
+  <div id="home" class="page active hero">
+    <video autoplay muted loop>
+      <source src="https://www.w3schools.com/howto/rain.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+    <div class="hero-content">
+      <h1>VALO-X</h1>
+      <p>About Your Agent</p>
+    </div>
+  </div>
+
+  <!-- AGENTS GRID -->
+  <div class="agents" id="agentsSection">
+    <div class="agent" onclick="openPage('phoenix')">
+      <img src="images (2).jpg">
+      <h3>🔥 Phoenix</h3>
+    </div>
+    <div class="agent" onclick="openPage('jett')">
+      <img src="download (30).jpg">
+      <h3>💨 Jett</h3>
+    </div>
+    <div class="agent" onclick="openPage('reyna')">
+      <img src="download (31).jpg">
+      <h3>💀 Reyna</h3>
+    </div>
+  </div>
+
+  <!-- PHOENIX PAGE -->
+  <div id="phoenix" class="page">
+    <h2>🔥 Phoenix</h2>
+    <img src="download (33).jpg" width="300">
+    <div class="abilities">
+      <div class="ability">🔥 Blaze – Creates a wall of fire that blocks vision.</div>
+      <div class="ability">💥 Curveball – Throws a flash that blinds enemies.</div>
+      <div class="ability">♻️ Hot Hands – Fireball that heals Phoenix.</div>
+      <div class="ability">🔥 Ultimate: Run It Back – Revive after death.</div>
+    </div>
+    <button class="back" onclick="goHome()">⬅ Back</button>
+  </div>
+
+  <!-- JETT PAGE -->
+  <div id="jett" class="page">
+    <h2>💨 Jett</h2>
+    <img src="download (32).jpg" width="300">
+    <div class="abilities">
+      <div class="ability">💨 Dash – Quickly move forward.</div>
+      <div class="ability">⬆️ Updraft – Launch high into air.</div>
+      <div class="ability">🌫 Cloudburst – Throw smoke to block vision.</div>
+      <div class="ability">💨 Ultimate: Blade Storm – Throw deadly knives.</div>
+    </div>
+    <button class="back" onclick="goHome()">⬅ Back</button>
+  </div>
+
+  <!-- REYNA PAGE -->
+  <div id="reyna" class="page">
+    <h2>💀 Reyna</h2>
+    <img src="images (3).jpg" width="300">
+    <div class="abilities">
+      <div class="ability">👁 Leer – Blind enemies.</div>
+      <div class="ability">❤️ Devour – Heal after kills.</div>
+      <div class="ability">👻 Dismiss – Become invulnerable.</div>
+      <div class="ability">💀 Ultimate: Empress – Boost combat power.</div>
+    </div>
+    <button class="back" onclick="goHome()">⬅ Back</button>
+  </div>
+</div>
+
+<script>
+// ===== LOADER =====
+const loader = document.getElementById("loader");
+const mainSite = document.getElementById("mainSite");
+const progress = document.getElementById("progress");
+const percentageText = document.getElementById("percentage");
+const pressEnter = document.getElementById("pressEnter");
+const sound = document.getElementById("loadSound");
+
+let percent = 0;
+function updateLoader() {
+  if(percent < 100){
+    percent++;
+    progress.style.width = percent + "%";
+    percentageText.innerText = percent + "%";
+    sound.play().catch(()=>{});
+    setTimeout(updateLoader, 30);
+  } else {
+    percentageText.style.display = "none";
+    progress.parentElement.style.display = "none";
+    pressEnter.style.display = "block";
+
+    document.addEventListener("keydown", function start(e){
+      if(e.key === "Enter") {
+        loader.style.display = "none";
+        mainSite.style.display = "block";
+        mainSite.classList.add("active");
+        document.body.style.overflow = "auto";
+        document.removeEventListener("keydown", start);
+      }
+    });
+  }
+}
+setTimeout(updateLoader, 1500);
+
+// ===== PAGE NAVIGATION =====
+function openPage(id) {
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+    p.style.opacity = 0;
+  });
+  document.getElementById(id).classList.add("active");
+}
+
+function goHome() {
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("home").classList.add("active");
+}
+</script>
+</body>
+</html>
